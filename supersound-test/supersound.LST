@@ -1,0 +1,59 @@
+C51 COMPILER V7.50   SUPERSOUND                                                            08/12/2010 16:46:53 PAGE 1   
+
+
+C51 COMPILER V7.50, COMPILATION OF MODULE SUPERSOUND
+OBJECT MODULE PLACED IN supersound.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE supersound.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define uchar unsigned char
+   3          #define uint unsigned int
+   4          
+   5          sbit led0=P1^0;
+   6          sbit input=P1^7;
+   7          sbit en_a=P1^6;
+   8          sbit en_b=P3^1;
+   9          sbit sw1=P3^2;
+  10          
+  11          //uchar control[]={0xf8,0xfc,0xf4,0xf6,0xf2,0xf3,0xf1,0xf9};
+  12          
+  13          void delay(unsigned int x)
+  14          {
+  15   1              unsigned int y=65535;
+  16   1              while(x--)
+  17   1                      while(y--);
+  18   1      }
+  19          
+  20          void main()
+  21          {
+  22   1              while(1)
+  23   1              {       
+  24   2                      led0=1;
+  25   2                      delay(1000);
+  26   2                      led0=0;
+  27   2                      delay(1000);
+  28   2              }
+  29   1      }
+  30          
+  31          void INT0_server() interrupt 0
+  32          {
+  33   1              led0=0;
+  34   1              delay(1000);
+  35   1              led0=1;
+  36   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     80    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

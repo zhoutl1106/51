@@ -1,0 +1,148 @@
+C51 COMPILER V7.50   12864                                                                 08/17/2010 16:46:03 PAGE 1   
+
+
+C51 COMPILER V7.50, COMPILATION OF MODULE 12864
+OBJECT MODULE PLACED IN 12864.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE 12864.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          //#######################################################
+   2          //
+   3          //    试  验 名 称: 图形液晶 128*64 显示程序
+   4          //
+   5          //    试  验 功 能: 通过128*64进行汉字,字符的显示
+   6          //
+   7          //    实验硬件环境: 所有程序均在"亿唯电子"公司 MINI51实验板上测试成功,
+   8          //                  主控芯片: STC公司的 STC12C5A16S2 单片机
+   9          //                              晶振频率: 11.0592MHz 
+  10          //       
+  11          //    更多程序下载>>亿唯电子: www.evmcu.net
+  12          //
+  13          //#######################################################
+  14          #include<reg52.h>
+  15          #include<intrins.h>
+  16          
+  17          sbit    LCD_DI   = P3^0 ;
+  18          sbit    LCD_RW   = P3^1 ;
+  19          sbit    LCD_EN    = P3^2 ;
+  20          sbit    LCD_CS1  = P3^3 ;
+  21          sbit    LCD_CS2  = P3^4 ;
+  22          sbit    LCD_RST  = P3^5 ;
+  23          
+  24          #define LCD_data_port P1 // 数据端口定义
+  25          
+  26          void delay_ms(unsigned int x) // 延时毫秒级
+  27          {
+  28   1              unsigned int a=0,b=0,c=0;
+  29   1              for(a=x;a>0;a--)
+  30   1              for(b=5;b>0;b--)
+  31   1              for(c=128;c>0;c--);
+  32   1      }
+  33          
+  34          void delay_us() // 固定延时100微秒
+  35          {
+  36   1              unsigned char n=0;
+  37   1              for(n=220;n>0;n--)
+  38   1              {
+  39   2                      _nop_();
+  40   2              }
+  41   1      }
+  42          
+  43          ////////////////////////////////*液晶显示程序*/////////////////////////////
+  44          
+  45          void LCD_write_com(unsigned char shu)//写指令
+  46          {
+  47   1              LCD_DI=0;
+  48   1              LCD_RW=0;
+  49   1              LCD_EN=0;
+  50   1      
+  51   1              delay_us();
+  52   1              LCD_data_port = shu ;
+  53   1              delay_us();
+  54   1              LCD_EN=1;
+  55   1              delay_us();
+C51 COMPILER V7.50   12864                                                                 08/17/2010 16:46:03 PAGE 2   
+
+  56   1              LCD_EN=0;
+  57   1              delay_us();
+  58   1      }
+  59          
+  60          void LCD_write_data(unsigned char shu)//写数据
+  61          {
+  62   1              LCD_DI=1;
+  63   1              LCD_RW=0;
+  64   1              LCD_EN=0;
+  65   1      
+  66   1              delay_us();
+  67   1              LCD_data_port = shu ;
+  68   1              delay_us();
+  69   1              LCD_EN=1;
+  70   1              delay_us();
+  71   1              LCD_EN=0;
+  72   1              delay_us();
+  73   1      }
+  74          
+  75          void LCD_write_array(unsigned char *shu) // 写字符串
+  76          {
+  77   1              LCD_DI=1;
+  78   1              LCD_RW=0;
+  79   1              LCD_EN=0;
+  80   1      
+  81   1              while((*shu)!='\0')
+  82   1              {
+  83   2                      LCD_data_port = *shu ;
+  84   2                      delay_us();
+  85   2                      LCD_EN=1;
+  86   2                      delay_us();
+  87   2                      LCD_EN=0;
+  88   2                      delay_us();
+  89   2                      shu++;
+  90   2              }
+  91   1      }
+  92          
+  93          /////////////////////////////////*液晶初始化*///////////////////////////////
+  94          void LCD_initial()//液晶初始化
+  95          {
+  96   1              LCD_EN=0;
+  97   1              LCD_write_com(0x30);
+  98   1              LCD_write_com(0x0c);
+  99   1              LCD_write_com(0x01);
+ 100   1              LCD_write_com(0x06);
+ 101   1              delay_ms(10); // 等待一段时间用于清屏
+ 102   1      }
+ 103          
+ 104          void main(void)
+ 105          {
+ 106   1              LCD_initial();
+ 107   1              while(1)
+ 108   1              {
+ 109   2                      LCD_write_com(0x81);
+ 110   2                      LCD_write_array("Designed By");
+ 111   2                      LCD_write_com(0x92);
+ 112   2                      LCD_write_array("亿唯电子");
+ 113   2                      LCD_write_com(0x89);
+ 114   2                      LCD_write_array("WWW.EVMCU.NET");
+ 115   2                      LCD_write_com(0x99);
+ 116   2                      LCD_write_array("QQ:1164601485");
+ 117   2                      delay_ms(100);
+C51 COMPILER V7.50   12864                                                                 08/17/2010 16:46:03 PAGE 3   
+
+ 118   2      
+ 119   2                      while(1);
+ 120   2              }
+ 121   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    224    ----
+   CONSTANT SIZE    =     49    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

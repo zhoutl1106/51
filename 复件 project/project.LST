@@ -1,0 +1,103 @@
+C51 COMPILER V7.50   PROJECT                                                               08/23/2010 21:57:53 PAGE 1   
+
+
+C51 COMPILER V7.50, COMPILATION OF MODULE PROJECT
+OBJECT MODULE PLACED IN project.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE project.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<STC12C5A.h>
+   2          #include<intrins.h>
+   3          
+   4          #define uint unsigned int 
+   5          #define uchar unsigned char
+   6          
+   7          /***********************函数声明***********************************/
+   8          void delay(unsigned int x);
+   9          void delay_ms(unsigned int x); // 延时毫秒级
+  10          void delay_us(); // 延时100微秒
+  11          /******************************************************************/
+  12          
+  13          sbit LCD_RS=P3^0; // 数据指令选择端定义
+  14          sbit LCD_RW=P3^1;
+  15          sbit LCD_EN=P3^2; // 使能端定义
+  16          sbit infraL=P3^3;
+  17          sbit infraM=P3^4;
+  18          sbit infraR=P3^5;
+  19          
+  20          sbit p14=P1^4;
+  21          sbit touch=P1^0;
+  22          sbit scanner=P1^1;
+  23          
+  24          
+  25          unsigned int time=0,t1=0,t2=0,t3=0;
+  26          
+  27          #define LCD_data_port P2  // 定义给液晶送数的端口
+  28          #define motor_port P0
+  29          #define CATCHCODE 150
+  30          #define OPENCODE 130
+  31          
+  32          #include<1602.h>
+  33          #include<motor.h>
+  34          #include<pwm.h>
+  35          
+  36          
+  37          /************************延时函数*******************************/
+  38          void delay(unsigned int x)
+  39          {
+  40   1              char y=110;
+  41   1              while(x--)
+  42   1                      while(y--);
+  43   1      }
+  44          void delay_ms(unsigned int x) // 延时毫秒级
+  45          {
+  46   1              unsigned int a=0,b=0,c=0;
+  47   1              for(a=x;a>0;a--)
+  48   1              for(b=5;b>0;b--)
+  49   1              for(c=128;c>0;c--);
+  50   1      }
+  51          
+  52          void delay_us() // 延时100微秒
+  53          {
+  54   1              unsigned char n=0;
+  55   1              for(n=220;n>0;n--)
+C51 COMPILER V7.50   PROJECT                                                               08/23/2010 21:57:53 PAGE 2   
+
+  56   1              {
+  57   2                      _nop_();
+  58   2              }
+  59   1      }
+  60          /***************************************************************/
+  61          void main()
+  62          {
+  63   1      /*********************initial*******************/
+  64   1              PWM_initial();
+  65   1              touch=1;
+  66   1              scanner=1;
+  67   1              infraL=1;
+  68   1              infraM=1;
+  69   1              infraR=1;
+  70   1              OPEN();
+  71   1      /*********************first time**************************************************************/
+  72   1              while(1)
+  73   1              {
+  74   2                      if(0==infraM)
+  75   2                              forward(100);
+  76   2              }
+  77   1              while(1);
+  78   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    746    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     58      15
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

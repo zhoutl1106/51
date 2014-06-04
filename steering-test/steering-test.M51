@@ -1,0 +1,160 @@
+BL51 BANKED LINKER/LOCATER V5.12                                                        08/19/2010  18:47:39  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V5.12, INVOKED BY:
+D:\KEIL\C51\BIN\BL51.EXE steering-test.obj TO steering-test RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  steering-test.obj (STEERING_TEST)
+  D:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+
+
+LINK MAP OF MODULE:  steering-test (STEERING_TEST)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            IDATA   0008H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0038H     UNIT         ?PR?_DELAYUS?STEERING_TEST
+            CODE    003BH     0003H     ABSOLUTE     
+            CODE    003EH     0017H     UNIT         ?PR?PROG0?STEERING_TEST
+            CODE    0055H     0017H     UNIT         ?PR?PROG1?STEERING_TEST
+            CODE    006CH     0017H     UNIT         ?PR?PROG2?STEERING_TEST
+            CODE    0083H     000CH     UNIT         ?C_C51STARTUP
+            CODE    008FH     0005H     UNIT         ?PR?MAIN?STEERING_TEST
+
+
+
+OVERLAY MAP OF MODULE:   steering-test (STEERING_TEST)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?STEERING_TEST
+
+?PR?MAIN?STEERING_TEST
+  +--> ?PR?PROG2?STEERING_TEST
+
+?PR?PROG2?STEERING_TEST
+  +--> ?PR?_DELAYUS?STEERING_TEST
+
+
+
+SYMBOL TABLE OF MODULE:  steering-test (STEERING_TEST)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        STEERING_TEST
+  C:0000H         SYMBOL        _ICE_DUMMY_
+BL51 BANKED LINKER/LOCATER V5.12                                                      08/19/2010  18:47:39  PAGE 2
+
+
+  C:003BH         PUBLIC        reserve
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  D:00A8H         PUBLIC        IE
+  D:00B8H         PUBLIC        IP
+  C:008FH         PUBLIC        main
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  C:003EH         PUBLIC        Prog0
+  C:0055H         PUBLIC        Prog1
+  C:006CH         PUBLIC        Prog2
+  B:0090H.0       PUBLIC        out
+  C:0003H         PUBLIC        _delayus
+  D:00C8H         PUBLIC        T2CON
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          _DELAYUS
+  D:0006H         SYMBOL        x
+  -------         DO            
+  D:0004H         SYMBOL        a
+  D:0002H         SYMBOL        b
+  D:0082H         SYMBOL        c
+  -------         ENDDO         
+  C:0003H         LINE#         15
+  C:0003H         LINE#         16
+  C:0003H         LINE#         17
+  C:0008H         LINE#         18
+  C:0015H         LINE#         19
+  C:0019H         LINE#         20
+  C:003AH         LINE#         21
+  -------         ENDPROC       _DELAYUS
+  -------         PROC          PROG0
+  -------         DO            
+  D:0001H         SYMBOL        m
+  -------         ENDDO         
+  C:003EH         LINE#         28
+  C:003EH         LINE#         29
+  C:003EH         LINE#         32
+  C:0040H         LINE#         33
+  C:0040H         LINE#         34
+  C:0042H         LINE#         35
+  C:0049H         LINE#         36
+  C:004BH         LINE#         37
+  C:0050H         LINE#         38
+  C:0054H         LINE#         39
+  -------         ENDPROC       PROG0
+  -------         PROC          PROG1
+  -------         DO            
+  D:0001H         SYMBOL        m
+  -------         ENDDO         
+  C:0055H         LINE#         46
+  C:0055H         LINE#         47
+  C:0055H         LINE#         50
+  C:0057H         LINE#         51
+  C:0057H         LINE#         52
+  C:0059H         LINE#         53
+  C:0060H         LINE#         54
+  C:0062H         LINE#         55
+BL51 BANKED LINKER/LOCATER V5.12                                                      08/19/2010  18:47:39  PAGE 3
+
+
+  C:0067H         LINE#         56
+  C:006BH         LINE#         57
+  -------         ENDPROC       PROG1
+  -------         PROC          PROG2
+  -------         DO            
+  D:0001H         SYMBOL        m
+  -------         ENDDO         
+  C:006CH         LINE#         63
+  C:006CH         LINE#         64
+  C:006CH         LINE#         67
+  C:006EH         LINE#         68
+  C:006EH         LINE#         69
+  C:0070H         LINE#         70
+  C:0077H         LINE#         71
+  C:0079H         LINE#         72
+  C:007EH         LINE#         73
+  C:0082H         LINE#         74
+  -------         ENDPROC       PROG2
+  -------         PROC          MAIN
+  C:008FH         LINE#         80
+  C:008FH         LINE#         81
+  C:008FH         LINE#         82
+  C:008FH         LINE#         83
+  C:008FH         LINE#         84
+  C:0092H         LINE#         85
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        STEERING_TEST
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PROG0?STEERING_TEST
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PROG1?STEERING_TEST
+
+Program Size: data=9.0 xdata=0 code=148
+LINK/LOCATE RUN COMPLETE.  2 WARNING(S),  0 ERROR(S)

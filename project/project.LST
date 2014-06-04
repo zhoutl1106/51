@@ -1,0 +1,458 @@
+C51 COMPILER V9.00   PROJECT                                                               08/29/2010 18:51:12 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE PROJECT
+OBJECT MODULE PLACED IN project.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE project.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<STC12C5A.h>
+   2          #include<intrins.h>
+   3          
+   4          #define uint unsigned int 
+   5          #define uchar unsigned char
+   6          
+   7          /***********************函数声明***********************************/
+   8          void delay(unsigned int x);
+   9          void delay_ms(unsigned int x); // 延时毫秒级
+  10          void delay_us(); // 延时100微秒
+  11          /******************************************************************/
+  12          
+  13          sbit LCD_RS=P3^0; // 数据指令选择端定义
+  14          sbit LCD_RW=P3^1;
+  15          sbit LCD_EN=P3^2; // 使能端定义
+  16          sbit infraL=P3^3;
+  17          sbit infraM=P3^4;
+  18          sbit infraR=P3^5;
+  19          sbit buzzer=P1^6;
+  20          
+  21          sbit p14=P1^4;
+  22          sbit touch=P1^0;
+  23          sbit scanner=P1^1;
+  24          
+  25          
+  26          unsigned int time=0,t1=0,t2=0,t3=0;
+  27          
+  28          #define LCD_data_port P2  // 定义给液晶送数的端口
+  29          #define motor_port P0
+  30          #define CATCHCODE 156
+  31          #define OPENCODE 145
+  32          #define SPEED 7
+  33          #define TURNSPEED 15
+  34          #define BACKSPEED 12
+  35          
+  36          #include<1602.h>
+  37          #include<motor.h>
+  38          #include<pwm.h>
+  39          
+  40          
+  41          /************************延时函数*******************************/
+  42          void delay(unsigned int x)
+  43          {
+  44   1              char y=110;
+  45   1              while(x--)
+  46   1                      while(y--);
+  47   1      }
+  48          void delay_ms(unsigned int x) // 延时毫秒级
+  49          {
+  50   1              unsigned int a=0,b=0,c=0;
+  51   1              for(a=x;a>0;a--)
+  52   1              for(b=5;b>0;b--)
+  53   1              for(c=128;c>0;c--);
+  54   1      }
+  55          
+C51 COMPILER V9.00   PROJECT                                                               08/29/2010 18:51:12 PAGE 2   
+
+  56          void delay_us() // 延时100微秒
+  57          {
+  58   1              unsigned char n=0;
+  59   1              for(n=220;n>0;n--)
+  60   1              {
+  61   2                      _nop_();
+  62   2              }
+  63   1      }
+  64          /***************************************************************/
+  65          void main()
+  66          {
+  67   1              buzzer=0;
+  68   1              delay_ms(100);
+  69   1              buzzer=1;
+  70   1              delay_ms(100);
+  71   1              buzzer=0;
+  72   1              delay_ms(100);
+  73   1              buzzer=1;
+  74   1      /*********************initial*******************/
+  75   1              PWM_initial();
+  76   1              touch=1;
+  77   1              scanner=1;
+  78   1              infraL=1;
+  79   1              infraM=1;
+  80   1              infraR=1;
+  81   1              OPEN();
+  82   1      
+  83   1      /*********************first time**************************************************************/
+  84   1              forward(30,20);
+  85   1              forward(115,SPEED);
+  86   1              delay_ms(50);
+  87   1              left(33,TURNSPEED);
+  88   1              delay_ms(50);
+  89   1              while(1)
+  90   1              {
+  91   2                      if(0==infraR)
+  92   2                      {
+  93   3                              delay(5);
+  94   3                              if(0==infraR)
+  95   3                              goto NEXT11;
+  96   3                      }
+  97   2                      forward(1,SPEED);
+  98   2              }
+  99   1      NEXT11: 
+ 100   1              delay_ms(500);
+ 101   1              back(10,BACKSPEED);
+ 102   1              delay_ms(50);
+ 103   1              while(1)
+ 104   1              {
+ 105   2                      if(1==infraM)
+ 106   2                      {
+ 107   3                              delay(5);
+ 108   3                              if(1==infraM)
+ 109   3                              goto NEXT12;
+ 110   3                      }
+ 111   2                      right(1,TURNSPEED);
+ 112   2              }
+ 113   1      NEXT12:
+ 114   1              right(11,TURNSPEED);
+ 115   1              delay_ms(50);
+ 116   1              while(1)
+ 117   1              {
+C51 COMPILER V9.00   PROJECT                                                               08/29/2010 18:51:12 PAGE 3   
+
+ 118   2                      if(0==touch)
+ 119   2                      {
+ 120   3                              delay(5);
+ 121   3                              if(0==touch)
+ 122   3                              goto NEXT13;
+ 123   3                      }
+ 124   2                      forward(1,SPEED+5);
+ 125   2              }
+ 126   1      NEXT13: 
+ 127   1              CATCH();
+ 128   1              buzzer=0;
+ 129   1              delay_ms(100);
+ 130   1              buzzer=1;
+ 131   1              delay_ms(100);
+ 132   1              buzzer=0;
+ 133   1              delay_ms(100);
+ 134   1              buzzer=1;
+ 135   1              delay_ms(100);
+ 136   1              back(30,BACKSPEED);
+ 137   1              delay_ms(50);
+ 138   1              left(35,TURNSPEED);
+ 139   1              delay_ms(50);
+ 140   1              forward(68,SPEED);
+ 141   1              delay_ms(50);
+ 142   1              left(34,TURNSPEED);
+ 143   1              delay_ms(50);
+ 144   1              while(1)
+ 145   1              {
+ 146   2                      if(0==infraR)
+ 147   2                      {
+ 148   3                              delay(5);
+ 149   3                              if(0==infraR)
+ 150   3                              goto NEXT14;
+ 151   3                      }
+ 152   2                      forward(1,SPEED);
+ 153   2              }
+ 154   1      NEXT14:
+ 155   1              forward(17,SPEED);
+ 156   1              delay_ms(50);
+ 157   1              right(35,TURNSPEED);
+ 158   1              delay_ms(50);
+ 159   1              while(1)
+ 160   1              {
+ 161   2                      if(0==scanner)
+ 162   2                      {
+ 163   3                              delay(5);
+ 164   3                              if(0==scanner)
+ 165   3                              goto NEXT15;
+ 166   3                      }
+ 167   2                      forward(1,TURNSPEED);
+ 168   2              }
+ 169   1      NEXT15: 
+ 170   1              left(5,TURNSPEED);
+ 171   1              buzzer=0;
+ 172   1              delay_ms(100);
+ 173   1              buzzer=1;
+ 174   1              delay_ms(100);
+ 175   1              buzzer=0;
+ 176   1              delay_ms(100);
+ 177   1              buzzer=1;
+ 178   1              delay_ms(100);
+ 179   1              buzzer=0;
+C51 COMPILER V9.00   PROJECT                                                               08/29/2010 18:51:12 PAGE 4   
+
+ 180   1              delay_ms(100);
+ 181   1              buzzer=1;
+ 182   1              delay_ms(100);
+ 183   1              OPEN();
+ 184   1              t1=time;
+ 185   1              Show();
+ 186   1              delay_ms(500);
+ 187   1      /*********************second time********************************************************************/
+ 188   1              back(120,BACKSPEED);
+ 189   1              delay_ms(50);
+ 190   1              right(36,TURNSPEED);
+ 191   1              delay_ms(50);
+ 192   1              forward(110,SPEED);
+ 193   1              delay_ms(50);
+ 194   1              left(34,TURNSPEED);
+ 195   1              delay_ms(50);
+ 196   1              while(1)
+ 197   1              {
+ 198   2                      if(0==infraR)
+ 199   2                      {
+ 200   3                              delay(5);
+ 201   3                              if(0==infraR)
+ 202   3                              goto NEXT21;
+ 203   3                      }
+ 204   2                      forward(1,SPEED);
+ 205   2              }
+ 206   1      NEXT21:
+ 207   1              delay_ms(500);  
+ 208   1              back(12,BACKSPEED);
+ 209   1              delay_ms(50);
+ 210   1              while(1)
+ 211   1              {
+ 212   2                      if(1==infraM)
+ 213   2                      {
+ 214   3                              delay(5);
+ 215   3                              if(1==infraM)
+ 216   3                              goto NEXT22;
+ 217   3                      }
+ 218   2                      right(1,TURNSPEED);
+ 219   2              }
+ 220   1      NEXT22:
+ 221   1              right(6,TURNSPEED);
+ 222   1              delay_ms(50);
+ 223   1              while(1)
+ 224   1              {
+ 225   2                      if(0==touch)
+ 226   2                      {
+ 227   3                              delay(5);
+ 228   3                              if(0==touch)
+ 229   3                              goto NEXT23;
+ 230   3                      }
+ 231   2                      forward(1,SPEED+5);
+ 232   2              }
+ 233   1      NEXT23: 
+ 234   1              CATCH();
+ 235   1              buzzer=0;
+ 236   1              delay_ms(100);
+ 237   1              buzzer=1;
+ 238   1              delay_ms(100);
+ 239   1              buzzer=0;
+ 240   1              delay_ms(100);
+ 241   1              buzzer=1;
+C51 COMPILER V9.00   PROJECT                                                               08/29/2010 18:51:12 PAGE 5   
+
+ 242   1              delay_ms(100);
+ 243   1              back(30,BACKSPEED);
+ 244   1              delay_ms(50);
+ 245   1              left(34,TURNSPEED);
+ 246   1              delay_ms(50);
+ 247   1              forward(45,SPEED);
+ 248   1              delay_ms(50);
+ 249   1              left(34,TURNSPEED);
+ 250   1              delay_ms(50);
+ 251   1              while(1)
+ 252   1              {
+ 253   2                      if(0==infraR)
+ 254   2                      {
+ 255   3                              delay(5);
+ 256   3                              if(0==infraR)
+ 257   3                              goto NEXT24;
+ 258   3                      }
+ 259   2                      forward(1,SPEED);
+ 260   2              }
+ 261   1      NEXT24:
+ 262   1              forward(10,SPEED);
+ 263   1              delay_ms(50);
+ 264   1              right(35,TURNSPEED);
+ 265   1              delay_ms(50);
+ 266   1              while(1)
+ 267   1              {
+ 268   2                      if(0==scanner)
+ 269   2                      {
+ 270   3                              delay(5);
+ 271   3                              if(0==scanner)
+ 272   3                              goto NEXT25;
+ 273   3                      }
+ 274   2                      forward(1,TURNSPEED);
+ 275   2              }
+ 276   1      NEXT25: 
+ 277   1              left(7,TURNSPEED);
+ 278   1              buzzer=0;
+ 279   1              delay_ms(100);
+ 280   1              buzzer=1;
+ 281   1              delay_ms(100);
+ 282   1              buzzer=0;
+ 283   1              delay_ms(100);
+ 284   1              buzzer=1;
+ 285   1              delay_ms(100);
+ 286   1              buzzer=0;
+ 287   1              delay_ms(100);
+ 288   1              buzzer=1;
+ 289   1              delay_ms(100);
+ 290   1              OPEN();
+ 291   1              t2=time-t1;
+ 292   1              Show();
+ 293   1              delay_ms(500);
+ 294   1      
+ 295   1      /*********************third time***********************************************************************/
+ 296   1              back(50,BACKSPEED);
+ 297   1              delay_ms(50);
+ 298   1              right(34,TURNSPEED);
+ 299   1              delay_ms(50);
+ 300   1              forward(110,SPEED);
+ 301   1              delay_ms(50);
+ 302   1              right(33,TURNSPEED);
+ 303   1              delay_ms(50);
+C51 COMPILER V9.00   PROJECT                                                               08/29/2010 18:51:12 PAGE 6   
+
+ 304   1              while(1)
+ 305   1              {
+ 306   2                      if(0==infraL)
+ 307   2                      {
+ 308   3                              delay(5);
+ 309   3                              if(0==infraL)
+ 310   3                              goto NEXT31;
+ 311   3                      }
+ 312   2                      forward(1,SPEED);
+ 313   2              }
+ 314   1      NEXT31:
+ 315   1              delay_ms(500);  
+ 316   1              back(10,BACKSPEED);
+ 317   1              delay_ms(50);
+ 318   1              while(1)
+ 319   1              {
+ 320   2                      if(1==infraM)
+ 321   2                      {
+ 322   3                              delay(5);
+ 323   3                              if(1==infraM)
+ 324   3                              goto NEXT32;
+ 325   3                      }
+ 326   2                      left(1,TURNSPEED);
+ 327   2              }
+ 328   1      NEXT32:
+ 329   1              left(3,TURNSPEED);
+ 330   1              delay_ms(50);
+ 331   1              while(1)
+ 332   1              {
+ 333   2                      if(0==touch)
+ 334   2                      {
+ 335   3                              delay(5);
+ 336   3                              if(0==touch)
+ 337   3                              goto NEXT33;
+ 338   3                      }
+ 339   2                      forward(1,SPEED+5);
+ 340   2              }
+ 341   1      NEXT33: 
+ 342   1              CATCH();
+ 343   1              buzzer=0;
+ 344   1              delay_ms(100);
+ 345   1              buzzer=1;
+ 346   1              delay_ms(100);
+ 347   1              buzzer=0;
+ 348   1              delay_ms(100);
+ 349   1              buzzer=1;
+ 350   1              delay_ms(100);
+ 351   1      //      back(80,BACKSPEED);
+ 352   1      //      delay_ms(50);
+ 353   1              left(33,TURNSPEED);
+ 354   1              delay_ms(50);
+ 355   1              forward(23,SPEED);
+ 356   1              delay_ms(50);
+ 357   1              left(33,TURNSPEED);
+ 358   1              delay_ms(50);
+ 359   1              while(1)
+ 360   1              {
+ 361   2                      if(0==infraR)
+ 362   2                      {
+ 363   3                              delay(5);
+ 364   3                              if(0==infraR)
+ 365   3                              goto NEXT34;
+C51 COMPILER V9.00   PROJECT                                                               08/29/2010 18:51:12 PAGE 7   
+
+ 366   3                      }
+ 367   2                      forward(1,SPEED);
+ 368   2              }
+ 369   1      NEXT34:
+ 370   1              forward(5,SPEED);
+ 371   1              delay_ms(50);
+ 372   1              right(38,TURNSPEED);
+ 373   1              delay_ms(50);
+ 374   1              while(1)
+ 375   1              {
+ 376   2                      if(0==scanner)
+ 377   2                      {
+ 378   3                              delay(5);
+ 379   3                              if(0==scanner)
+ 380   3                              goto NEXT35;
+ 381   3                      }
+ 382   2                      forward(1,TURNSPEED);
+ 383   2              }
+ 384   1      NEXT35: 
+ 385   1              left(10,TURNSPEED);
+ 386   1              delay_ms(50);
+ 387   1              right(1,TURNSPEED);
+ 388   1              buzzer=0;
+ 389   1              delay_ms(100);
+ 390   1              buzzer=1;
+ 391   1              delay_ms(100);
+ 392   1              buzzer=0;
+ 393   1              delay_ms(100);
+ 394   1              buzzer=1;
+ 395   1              delay_ms(100);
+ 396   1              buzzer=0;
+ 397   1              delay_ms(100);
+ 398   1              buzzer=1;
+ 399   1              delay_ms(100);
+ 400   1              OPEN();;
+ 401   1              t3=time-t2-t1;
+ 402   1              delay_ms(500);
+ 403   1              back(50,BACKSPEED);
+ 404   1              Show();
+ 405   1              buzzer=0;
+ 406   1              delay_ms(100);
+ 407   1              buzzer=1;
+ 408   1              delay_ms(100);
+ 409   1              buzzer=0;
+ 410   1              delay_ms(100);
+ 411   1              buzzer=1;
+ 412   1              delay_ms(100);
+ 413   1              buzzer=0;
+ 414   1              delay_ms(100);
+ 415   1              buzzer=1;
+ 416   1              delay_ms(1000);
+ 417   1              buzzer=0;
+ 418   1              delay_ms(1000);
+ 419   1              buzzer=1;
+ 420   1              while(1);
+ 421   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1675    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+C51 COMPILER V9.00   PROJECT                                                               08/29/2010 18:51:12 PAGE 8   
+
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     58      19
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

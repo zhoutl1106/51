@@ -1,0 +1,38 @@
+C51 COMPILER V7.50   PWM                                                                   08/19/2010 19:47:11 PAGE 1   
+
+
+C51 COMPILER V7.50, COMPILATION OF MODULE PWM
+OBJECT MODULE PLACED IN PWM.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE PWM.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <STC12C5A.h>
+   2          sfr  CCAPMn0  = 0xDA;//PCA Module 0 Mode Register 
+   3          void main(void)
+   4          {
+   5   1         CMOD = 0x02;  //Setup PCA timer
+   6   1         CL   = 0x00;
+   7   1         CH   = 0x00;
+   8   1         CCAP0L  = 0xf9;  
+   9   1         CCAP0H  = 0x25;
+  10   1         CCAPMn0 = 0x42;
+  11   1         CR     = 1;//start pca timer
+  12   1         while(1)
+  13   1         {};
+  14   1      
+  15   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     21    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

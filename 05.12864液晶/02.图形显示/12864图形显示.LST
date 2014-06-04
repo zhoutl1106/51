@@ -1,0 +1,191 @@
+C51 COMPILER V7.06   12864图_蝊允_                                                         11/23/2009 14:40:54 PAGE 1   
+
+
+C51 COMPILER V7.06, COMPILATION OF MODULE 12864图_蝊允_
+OBJECT MODULE PLACED IN 12864图形显示.OBJ
+COMPILER INVOKED BY: D:\Program Files\keil\C51\BIN\C51.EXE 12864图形显示.c BROWSE DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          //#######################################################
+   2          //
+   3          //  试  验 名 称: 图形液晶 128*64 显示程序
+   4          //
+   5          //  试  验 功 能: 通过128*64进行图形的显示
+   6          //
+   7          //  实验硬件环境: 所有程序均在"亿唯电子"公司 MINI51实验板上测试成功,
+   8          //                主控芯片: STC公司的 STC12C5A16S2 单片机
+   9          //                晶振频率: 11.0592MHz 
+  10          //
+  11          //  更多程序下载>>亿唯电子: www.evmcu.net 
+  12          //
+  13          //#######################################################
+  14          
+  15          #include<reg52.h>
+  16          #include<BMP.h> // 本文件为自定义文件,包含所要显示的图形的数据
+  17          #include<intrins.h>
+  18          
+  19          sbit    LCD_EN   = P3^7 ;
+  20          sbit    LCD_PSB  = P3^6 ;
+  21          sbit    LCD_RW   = P3^5 ;
+  22          sbit    LCD_RS   = P3^4 ;
+  23          
+  24          #define LCD_data_port P1 // 数据端口定义
+  25          
+  26          void delay_ms(unsigned int x) // 延时毫秒级
+  27          {
+  28   1              unsigned int a=0,b=0,c=0;
+  29   1              for(a=x;a>0;a--)
+  30   1              for(b=5;b>0;b--)
+  31   1              for(c=128;c>0;c--);
+  32   1      }
+  33          
+  34          void delay_us() // 固定延时100微秒
+  35          {
+  36   1              unsigned char n=0;
+  37   1              for(n=220;n>0;n--)
+  38   1              {
+  39   2                      _nop_();
+  40   2              }
+  41   1      }
+  42          
+  43          void delay_8us()// 固定延时八微秒  
+  44          {
+  45   1              unsigned char n=0;
+  46   1              for(n=14;n>0;n--) _nop_();
+  47   1      }
+  48          
+  49          ////////////////////////////////*液晶显示程序*/////////////////////////////
+  50          
+  51          void LCD_write_com(unsigned char shu)//写指令
+  52          {
+  53   1              LCD_PSB=1;
+  54   1              LCD_RS=0;
+  55   1              LCD_RW=0;
+C51 COMPILER V7.06   12864图_蝊允_                                                         11/23/2009 14:40:54 PAGE 2   
+
+  56   1              LCD_EN=0;
+  57   1      
+  58   1              LCD_data_port = shu ;
+  59   1              delay_8us();
+  60   1              LCD_EN=1;
+  61   1              delay_8us();
+  62   1              LCD_EN=0;
+  63   1              delay_us(); // 留给128*64一定的处理时间, 芯片资料推荐是75 微秒
+  64   1      }
+  65          
+  66          void LCD_write_data(unsigned char shu)//写数据
+  67          {
+  68   1              LCD_PSB=1;
+  69   1              LCD_RS=1;
+  70   1              LCD_RW=0;
+  71   1              LCD_EN=0;
+  72   1      
+  73   1              LCD_data_port = shu ;
+  74   1              delay_8us();
+  75   1              LCD_EN=1;
+  76   1              delay_8us();
+  77   1              LCD_EN=0;
+  78   1              delay_us(); // 留给128*64一定的处理时间, 芯片资料推荐是75 微秒
+  79   1      }
+  80          
+  81          void LCD_write_array(unsigned char *shu) // 写字符串
+  82          {
+  83   1              LCD_PSB=1;
+  84   1              LCD_RS=1;
+  85   1              LCD_RW=0;
+  86   1              LCD_EN=0;
+  87   1      
+  88   1              while((*shu)!='\0')
+  89   1              {
+  90   2                      LCD_data_port = *shu ;
+  91   2                      delay_8us();
+  92   2                      LCD_EN=1;
+  93   2                      delay_8us();
+  94   2                      LCD_EN=0;
+  95   2                      delay_us();
+  96   2                      shu++;
+  97   2              }
+  98   1      }
+  99          
+ 100          void LCD_dis_figure(unsigned char *img) // 显示一幅64*128 的图形
+ 101          {
+ 102   1              volatile unsigned int i=0,point=0,x=0,y=0;
+ 103   1              for(i=0;i<2;i++)
+ 104   1              {
+ 105   2                      for(y=0;y<32;y++)
+ 106   2                      {
+ 107   3                              for(x=0;x<8;x++)
+ 108   3                              {
+ 109   4                                      LCD_write_com(0x34);       // 关闭图形显示,设定为扩充指令集工作
+ 110   4                                      LCD_write_com(0x80+y);     // 行地址
+ 111   4                                      LCD_write_com(0x80+x+i*8); // 列地址
+ 112   4                                      LCD_write_data(img[point++]); // 连续写入两字节的数据
+ 113   4                                      LCD_write_data(img[point++]);
+ 114   4                              }
+ 115   3                      }
+ 116   2              }
+ 117   1              LCD_write_com(0x36); // 开启图形显示
+C51 COMPILER V7.06   12864图_蝊允_                                                         11/23/2009 14:40:54 PAGE 3   
+
+ 118   1      }
+ 119          
+ 120          
+ 121          //////////////  * 清除图形显示 RAM */////////////////
+ 122          
+ 123          void LCD_clr_figure() 
+ 124          {
+ 125   1              volatile unsigned int x=0,y=0;
+ 126   1              for(y=0;y<32;y++)
+ 127   1              {
+ 128   2                      for(x=0;x<16;x++)
+ 129   2                      {
+ 130   3                              LCD_write_com(0x34);    // 关闭图形显示,设定为扩充指令集工作
+ 131   3                              LCD_write_com(0x80+y);  // 行地址
+ 132   3                              LCD_write_com(0x80+x);  // 列地址
+ 133   3                              LCD_write_data(0x00);   // 连续写入两字节的数据
+ 134   3                              LCD_write_data(0x00);   // 连续写入两字节的数据
+ 135   3                      }
+ 136   2              }
+ 137   1              LCD_write_com(0x36); // 开启图形显示
+ 138   1      }
+ 139          
+ 140          /////////////////////////////////*液晶初始化*///////////////////////////////
+ 141          
+ 142          void LCD_initial()//液晶初始化
+ 143          {
+ 144   1              LCD_EN=0;
+ 145   1              LCD_write_com(0x30);
+ 146   1              LCD_write_com(0x0c);
+ 147   1              LCD_write_com(0x01);
+ 148   1              LCD_write_com(0x06);
+ 149   1              delay_ms(10); // 等待一段时间用于清屏
+ 150   1      }
+ 151          
+ 152          void main(void)
+ 153          {
+ 154   1              delay_ms(100);
+ 155   1              LCD_initial();
+ 156   1              while(1)
+ 157   1              {       
+ 158   2                      LCD_dis_figure(BMP_0); // 显示第一幅图像
+ 159   2                      delay_ms(4000);
+ 160   2                      LCD_clr_figure();
+ 161   2                      LCD_dis_figure(BMP); // 显示第二幅图像
+ 162   2                      while(1);
+ 163   2              }
+ 164   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    484    ----
+   CONSTANT SIZE    =   2048    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      15
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

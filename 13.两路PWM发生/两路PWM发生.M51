@@ -1,0 +1,189 @@
+BL51 BANKED LINKER/LOCATER V5.12                                                        08/20/2010  13:48:29  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V5.12, INVOKED BY:
+D:\KEIL\C51\BIN\BL51.EXE 两路PWM发生.obj TO 两路PWM发生 RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  两路PWM发生.obj (两路PWM发蒧)
+  D:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+  D:\KEIL\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  两路PWM发生 (两路PWM发蒧)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0003H     UNIT         ?DT?两路PWM发蒧
+            IDATA   000BH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0038H     UNIT         ?PR?_DELAY_MS?两路PWM发蒧
+            CODE    003BH     0003H     ABSOLUTE     
+            CODE    003EH     008CH     UNIT         ?C_C51STARTUP
+            CODE    00CAH     0036H     UNIT         ?PR?PWM_OUT?两路PWM发蒧
+            CODE    0100H     0031H     UNIT         ?PR?PWM_INITIAL?两路PWM发蒧
+            CODE    0131H     001DH     UNIT         ?PR?MAIN?两路PWM发蒧
+            CODE    014EH     0008H     UNIT         ?C_INITSEG
+
+
+
+OVERLAY MAP OF MODULE:   两路PWM发生 (两路PWM发蒧)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?两路PWM发蒧
+  +--> ?C_INITSEG
+
+?PR?MAIN?两路PWM发蒧
+  +--> ?PR?PWM_INITIAL?两路PWM发蒧
+  +--> ?PR?_DELAY_MS?两路PWM发蒧
+
+
+
+SYMBOL TABLE OF MODULE:  两路PWM发生 (两路PWM发蒧)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        两路PWM发蒧
+BL51 BANKED LINKER/LOCATER V5.12                                                      08/20/2010  13:48:29  PAGE 2
+
+
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0008H         PUBLIC        PWM_wide
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  D:00C0H         PUBLIC        P4
+  D:00C8H         PUBLIC        P5
+  B:00A8H.7       PUBLIC        EA
+  B:00D8H.7       PUBLIC        CF
+  D:00F9H         PUBLIC        CH
+  D:00A8H         PUBLIC        IE
+  D:00E9H         PUBLIC        CL
+  D:00FAH         PUBLIC        CCAP0H
+  D:00FBH         PUBLIC        CCAP1H
+  D:00EAH         PUBLIC        CCAP0L
+  B:00D8H.6       PUBLIC        CR
+  D:00EBH         PUBLIC        CCAP1L
+  D:00DAH         PUBLIC        CCAPM0
+  D:00DBH         PUBLIC        CCAPM1
+  D:00B8H         PUBLIC        IP
+  D:0097H         PUBLIC        CLK_DIV
+  D:00D9H         PUBLIC        CMOD
+  D:00D8H         PUBLIC        CCON
+  C:0131H         PUBLIC        main
+  C:0003H         PUBLIC        _delay_ms
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  D:008EH         PUBLIC        AUXR
+  C:0100H         PUBLIC        PWM_initial
+  D:00E0H         PUBLIC        ACC
+  D:008CH         PUBLIC        TH0
+  C:00CAH         PUBLIC        PWM_OUT
+  D:008AH         PUBLIC        TL0
+  D:000AH         PUBLIC        num
+  B:0090H.1       PUBLIC        p13
+  B:0090H.4       PUBLIC        p14
+  B:0088H.4       PUBLIC        TR0
+  B:0090H.3       PUBLIC        led0
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          _DELAY_MS
+  D:0006H         SYMBOL        x
+  -------         DO            
+  D:0004H         SYMBOL        a
+  D:0002H         SYMBOL        b
+  D:0082H         SYMBOL        c
+  -------         ENDDO         
+  C:0003H         LINE#         26
+  C:0003H         LINE#         27
+  C:0003H         LINE#         28
+  C:0008H         LINE#         29
+  C:0015H         LINE#         30
+  C:0019H         LINE#         31
+  C:003AH         LINE#         32
+  -------         ENDPROC       _DELAY_MS
+  -------         PROC          PWM_INITIAL
+BL51 BANKED LINKER/LOCATER V5.12                                                      08/20/2010  13:48:29  PAGE 3
+
+
+  C:0100H         LINE#         34
+  C:0100H         LINE#         35
+  C:0100H         LINE#         36
+  C:0103H         LINE#         37
+  C:0106H         LINE#         38
+  C:0109H         LINE#         40
+  C:010CH         LINE#         41
+  C:010FH         LINE#         43
+  C:0112H         LINE#         44
+  C:0115H         LINE#         46
+  C:0118H         LINE#         47
+  C:011BH         LINE#         49
+  C:011DH         LINE#         51
+  C:0120H         LINE#         52
+  C:0123H         LINE#         53
+  C:0126H         LINE#         54
+  C:0129H         LINE#         55
+  C:012CH         LINE#         56
+  C:012EH         LINE#         57
+  C:0130H         LINE#         58
+  -------         ENDPROC       PWM_INITIAL
+  -------         PROC          MAIN
+  C:0131H         LINE#         60
+  C:0131H         LINE#         61
+  C:0131H         LINE#         62
+  C:0134H         LINE#         64
+  C:0136H         LINE#         65
+  C:0136H         LINE#         66
+  C:0136H         LINE#         67
+  C:0139H         LINE#         68
+  C:013CH         LINE#         69
+  C:0143H         LINE#         70
+  C:0146H         LINE#         71
+  C:0149H         LINE#         72
+  C:014CH         LINE#         73
+  -------         ENDPROC       MAIN
+  -------         PROC          PWM_OUT
+  C:00CAH         LINE#         76
+  C:00CEH         LINE#         78
+  C:00D1H         LINE#         79
+  C:00D1H         LINE#         80
+  C:00D3H         LINE#         81
+  C:00D5H         LINE#         83
+  C:00D8H         LINE#         84
+  C:00DBH         LINE#         86
+  C:00E1H         LINE#         87
+  C:00E4H         LINE#         89
+  C:00EAH         LINE#         90
+  C:00EDH         LINE#         92
+  C:00EFH         LINE#         93
+  C:00F4H         LINE#         94
+  C:00F4H         LINE#         95
+  C:00F7H         LINE#         96
+  C:00F9H         LINE#         97
+  C:00F9H         LINE#         99
+  C:00F9H         LINE#         100
+  C:00FBH         LINE#         101
+BL51 BANKED LINKER/LOCATER V5.12                                                      08/20/2010  13:48:29  PAGE 4
+
+
+  -------         ENDPROC       PWM_OUT
+  -------         ENDMOD        两路PWM发蒧
+
+Program Size: data=12.0 xdata=0 code=342
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

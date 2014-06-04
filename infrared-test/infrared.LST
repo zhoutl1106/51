@@ -1,0 +1,48 @@
+C51 COMPILER V7.50   INFRARED                                                              08/12/2010 10:35:40 PAGE 1   
+
+
+C51 COMPILER V7.50, COMPILATION OF MODULE INFRARED
+OBJECT MODULE PLACED IN infrared.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE infrared.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #define uchar unsigned char
+   3          
+   4          sbit led0=P1^0;
+   5          sbit input=P1^7;
+   6          
+   7          uchar control[]={0x08,0x0c,0x04,0x06,0x02,0x03,0x01,0x09};
+   8          
+   9          void delay(unsigned int x)
+  10          {
+  11   1              char y=110;
+  12   1              while(x--)
+  13   1                      while(y--);
+  14   1      }
+  15          
+  16          void main()
+  17          {
+  18   1              while(1)
+  19   1              {
+  20   2                      if(0==input)
+  21   2                              led0=0;
+  22   2                      else
+  23   2                              led0=1;
+  24   2              }
+  25   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     32    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

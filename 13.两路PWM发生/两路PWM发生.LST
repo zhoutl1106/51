@@ -1,0 +1,126 @@
+C51 COMPILER V7.50   两路PWM发蒧                                                           08/20/2010 13:48:29 PAGE 1   
+
+
+C51 COMPILER V7.50, COMPILATION OF MODULE 两路PWM发蒧
+OBJECT MODULE PLACED IN 两路PWM发生.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE 两路PWM发生.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          //##############################################################
+   2          //
+   3          //    实  验 名 称: 两路PWM发生器
+   4          //
+   5          //    实  验 功 能: 本单片机PWM信号主要用于舵机控制
+   6          //                              PWM信号周期为20ms,正脉冲在0.5ms到2.5ms之间可调
+   7          //
+   8          //    实验硬件环境: 所有程序均在"亿唯电子"公司Mini-EV51单片机开发板(二代)上测试成功,
+   9          //                  主控芯片: STC公司的 STC12C5A16S2 
+  10          //                              晶振频率: 11.0592MHz 
+  11          //       
+  12          //    更多程序下载>>亿唯电子：www.evmcu.net
+  13          //
+  14          //##############################################################
+  15          #include<STC12C5A.H>
+  16          #include<intrins.h>
+  17          
+  18          sbit p13=P1^1;
+  19          sbit p14=P1^4;
+  20          sbit led0=P1^3;
+  21          
+  22          unsigned char num=0;
+  23          
+  24          unsigned char PWM_wide[2]={0,0}; // 数值从0到180
+  25          
+  26          void delay_ms(unsigned int x) // 延时毫秒级
+  27          {
+  28   1              unsigned int a=0,b=0,c=0;
+  29   1              for(a=x;a>0;a--)
+  30   1              for(b=5;b>0;b--)
+  31   1              for(c=128;c>0;c--);
+  32   1      }
+  33          
+  34          void PWM_initial()//PWM输出初始化(默认输出全为高电平)
+  35          {
+  36   1              CMOD=0x05;         //允许PCA溢出中断
+  37   1              CCAPM0=0x4c;   //用于设定工作方式
+  38   1              CCAPM1=0x4c;
+  39   1      
+  40   1              CH=0xf8;        //PCA计时器高八位
+  41   1              CL=0xf8;        //PCA计时器低八位
+  42   1      
+  43   1              CCAP0H=0xf9;
+  44   1              CCAP0L=0x25;
+  45   1      
+  46   1              CCAP1H=0xf9;
+  47   1              CCAP1L=0x25;
+  48   1      
+  49   1              EA=1;
+  50   1      
+  51   1              CLK_DIV=0x00;   //系统工作时钟分频设定
+  52   1              AUXR=0x80;      //将定时器T0、T1速度配置(定时器T0速度都为原来的12倍)
+  53   1              TMOD=0x22;      //将T0定时器作为PCA的时钟源
+  54   1              TH0=0x85;
+  55   1              TL0=0x85;
+C51 COMPILER V7.50   两路PWM发蒧                                                           08/20/2010 13:48:29 PAGE 2   
+
+  56   1              TR0=1;
+  57   1              CR=1;           //启动PCA计数器
+  58   1      }
+  59          
+  60          void main()
+  61          {
+  62   1              PWM_initial();
+  63   1      
+  64   1              led0=0;
+  65   1              while(1)
+  66   1              {
+  67   2                      PWM_wide[0]=30;// PWM输出引脚为P1.3
+  68   2                      PWM_wide[1]=30;// PWM输出引脚为P1.4
+  69   2                      delay_ms(2000);
+  70   2                      PWM_wide[0]=150;
+  71   2                      PWM_wide[1]=150;
+  72   2                      delay_ms(2000);
+  73   2              }
+  74   1      }
+  75          
+  76          void PWM_OUT()interrupt 7
+  77          {
+  78   1              if(CF==1)
+  79   1              {
+  80   2                      p13=1;
+  81   2                      p14=1;
+  82   2      
+  83   2                      CL=0xfa;        //PCA计时器低八位
+  84   2                      CH=0xf8;    //PCA计时器低八位
+  85   2      
+  86   2                      CCAP0L=39+PWM_wide[0];
+  87   2                      CCAP0H=0xf9;
+  88   2      
+  89   2                      CCAP1L=39+PWM_wide[1];
+  90   2                      CCAP1H=0xf9;
+  91   2      
+  92   2                      num++;
+  93   2                      if(50==num)
+  94   2                      {
+  95   3                              num=0;
+  96   3                              led0=~led0;
+  97   3                      }
+  98   2                              
+  99   2              }
+ 100   1              CF=0;
+ 101   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    188    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
